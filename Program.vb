@@ -22,28 +22,27 @@ Module Program
         ' tambien textos que no son balloons. Se decide con "getBallons" y "getTexts".
 
 
-
         Dim oCatiaSession As New CatiaSession()
-        If Not oCatiaSession.IsReady OrElse oCatiaSession.Status <> CatiaSessionStatus.DrawingDocument Then
-            Console.WriteLine("Por favor, asegúrese de tener un CATDrawing activo y guardado.")
+
+        If Not oCatiaSession.IsReady Then
+            Console.WriteLine("CatiaSession.Description: " & oCatiaSession.Description)
             Return
         End If
 
-
-
         Dim oDrawingDoc As DRAFTINGITF.DrawingDocument = oCatiaSession.ActiveDrawingDocument
-        Dim oDrawingRoot As DRAFTINGITF.DrawingRoot = oDrawingDoc.DrawingRoot
-        Dim oSheet As DRAFTINGITF.DrawingSheet = oDrawingRoot.ActiveSheet
-        Dim oViews As DRAFTINGITF.DrawingViews = oSheet.Views
-        Dim strDir As String = "D:\OneDrive\_CATIA\_V5R21-DLN\FS-1000_R03"
-        Dim getBallons As Boolean = True
-        Dim getTexts As Boolean = True
-        DrawingTools.GenerateTableFromBalloons2(oDrwDoc, strDir, getBallons, getTexts)
 
+        If oDrawingDoc IsNot Nothing Then
+            Dim oDrawingRoot As DRAFTINGITF.DrawingRoot = oDrawingDoc.DrawingRoot
+            Dim oSheet As DRAFTINGITF.DrawingSheet = oDrawingRoot.ActiveSheet
+            Dim oViews As DRAFTINGITF.DrawingViews = oSheet.Views
+            Dim strDir As String = "D:\OneDrive\_CATIA\_V5R21-DLN\FS-1000_R03"
+            Dim getBallons As Boolean = True
+            Dim getTexts As Boolean = True
+            GenerateTableFromBalloons2(oDrawingDoc, strDir, getBallons, getTexts)
+        Else
+            Console.WriteLine("CatiaSession.Description: " & oCatiaSession.Description)
+        End If
 
     End Sub
-
-
-
 
 End Module

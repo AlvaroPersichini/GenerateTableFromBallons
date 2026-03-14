@@ -82,21 +82,29 @@ Public Class CatiaSession
         End Get
     End Property
 
-
     Public ReadOnly Property Description As String
         Get
-            Select Case Status
-                Case CatiaSessionStatus.NotRunning : Return "CATIA is not running."
-                Case CatiaSessionStatus.NoWindowsOpen : Return "CATIA has no document open."
-                Case CatiaSessionStatus.ProductDocument : Return "Product document is active and saved."
-                Case CatiaSessionStatus.ProductDocumentNotSaved : Return "Product document is active but not saved (or new)."
-                Case CatiaSessionStatus.PartDocument : Return "Part document is active."
-                Case CatiaSessionStatus.DrawingDocument : Return "Drawing document is active."
-                Case CatiaSessionStatus.CatalogDocument : Return "Catalog document is active."
-                Case Else : Return "Unknown or invalid CATIA state."
-            End Select
+            Return "CatiaSessionStatus." & Me.Status.ToString()
         End Get
     End Property
+
+    'Public ReadOnly Property Description As String
+    '    Get
+    '        Select Case Status
+    '            Case CatiaSessionStatus.NotRunning : Return "CATIA is not running."
+    '            Case CatiaSessionStatus.NoWindowsOpen : Return "CATIA has no document open."
+    '            Case CatiaSessionStatus.ProductDocument : Return "Product document is active and saved."
+    '            Case CatiaSessionStatus.ProductDocumentNotSaved : Return "Product document is active but not saved (or new)."
+    '            Case CatiaSessionStatus.PartDocument : Return "Part document is active."
+    '            Case CatiaSessionStatus.DrawingDocument : Return "Drawing document is active and saved."
+    '            Case CatiaSessionStatus.DrawingDocumentNotSaved : Return "Drawing document is active but not saved (or new)."
+    '            Case CatiaSessionStatus.CatalogDocument : Return "Catalog document is active."
+    '            Case CatiaSessionStatus.AnalysisDocument : Return "Analysis document is active."
+    '            Case CatiaSessionStatus.ProcessDocument : Return "Process document is active."
+    '            Case Else : Return "Unknown or invalid CATIA state."
+    '        End Select
+    '    End Get
+    'End Property
 
 
     Public ReadOnly Property ActiveProductDocument As ProductStructureTypeLib.ProductDocument
@@ -111,12 +119,23 @@ Public Class CatiaSession
 
     Public ReadOnly Property ActiveDrawingDocument As DRAFTINGITF.DrawingDocument
         Get
-            If Me.Status = CatiaSessionStatus.DrawingDocument Then
+            If _app.ActiveDocument Is Nothing Then Return Nothing
+            If TypeName(_app.ActiveDocument) = "DrawingDocument" Then
                 Return CType(_app.ActiveDocument, DRAFTINGITF.DrawingDocument)
             End If
             Return Nothing
         End Get
     End Property
+
+
+    'Public ReadOnly Property ActiveDrawingDocument As DRAFTINGITF.DrawingDocument
+    '    Get
+    '        If Me.Status = CatiaSessionStatus.DrawingDocument Then
+    '            Return CType(_app.ActiveDocument, DRAFTINGITF.DrawingDocument)
+    '        End If
+    '        Return Nothing
+    '    End Get
+    'End Property
 
 
     Public ReadOnly Property RootProduct As ProductStructureTypeLib.Product
@@ -142,7 +161,7 @@ Public Class CatiaSession
         ProcessDocument = 7
         ScriptDocument = 8
         Unknown = -1
-        DrawingDocumentNotSaved = 10 ' Nuevo estado
+        DrawingDocumentNotSaved = 10
     End Enum
 
 End Class
